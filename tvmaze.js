@@ -3,6 +3,8 @@
 const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
+const API_BASE_URL = "http://api.tvmaze.com";
+const ALT_IMAGE = 'https://store-images.s-microsoft.com/image/apps.65316.13510798887490672.6e1ebb25-96c8-4504-b714-1f7cbca3c5ad.f9514a23-1eb8-4916-a18e-99b1a9817d15?mode=scale&q=90&h=300&w=300';
 
 
 /** Given a search term, search for tv shows that match that query.
@@ -24,27 +26,35 @@ const $searchForm = $("#searchForm");
 async function getShowsByTerm(term) {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
 
-  const nameSearch = 'http://api.tvmaze.com/search/shows';
+  const nameSearch = `${API_BASE_URL}/search/shows`;
   //http://api.tvmaze.com/search/shows?q=[searchquery]
   //const idSearch = `http://api.tvmaze.com/shows/${val}/episodes`;
   //http://api.tvmaze.com/shows/[showid]/episodes
   //make a nested object season = season iteration:idSearch[i].episodes
-  //season[i] 
+  //season[i]
 
-  const showsArray = await axios.get(nameSearch, { params: { q: term } })
-  let showId = showsArray.data[0].show.id;
-  let showName = showsArray.data[0].show.name;
-  let showSummary = showsArray.data[0].show.summary;
-  let showImage = showsArray.data[0].show.image.medium;
-  console.log("hope this works", showId, showName, showSummary, showImage)
-  return [
-    {
-      id: showId,
-      name: showName,
-      summary: showSummary,
-      image: showImage
+  const showsArray = await axios.get(nameSearch, { params: { q: term } });
+
+  const shows = [];
+
+  for (let i = 0; i < showsArray.data.length; i++) {
+
+    let image = showsArray.data[i].show.image;
+
+    if (!image) {
+      image = ALT_IMAGE;
+    } else {
+      image = image.medium;
     }
-  ]
+
+    shows.push({
+      id: showsArray.data[i].show.id,
+      name: showsArray.data[i].show.name,
+      summary: showsArray.data[i].show.summary,
+      image: image
+    });
+  }
+  return shows;
 }
 
 
@@ -58,8 +68,8 @@ function populateShows(shows) {
       `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
            <img
-              src="http://static.tvmaze.com/uploads/images/medium_portrait/160/401704.jpg"
-              alt="Bletchly Circle San Francisco"
+              src='${show.image}'
+              alt="Oops"
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
