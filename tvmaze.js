@@ -24,8 +24,12 @@ const $searchForm = $("#searchForm");
 async function getShowsByTerm(term) {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
 
-  nameSearch = 'http://api.tvmaze.com/search/shows';
-  idSearch =
+  const nameSearch = 'http://api.tvmaze.com/search/shows';
+  //http://api.tvmaze.com/search/shows?q=[searchquery]
+  const idSearch = `http://api.tvmaze.com/${}/episodes`
+  //http://api.tvmaze.com/shows/[showid]/episodes
+  //make a nested object season = season iteration:idSearch[i].season + idSearch[i].episodes
+  //season[i] 
 
 
   return [
