@@ -1,7 +1,7 @@
 "use strict";
 
 const $showsList = $("#showsList");
-const $episodesList = $(".episodesList")
+const $episodesList = $(".episodesList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
 const API_BASE_URL = "http://api.tvmaze.com";
@@ -84,13 +84,7 @@ function populateShows(shows) {
       `);
 
     $showsList
-    .append($show)
-    .on("click", `${}`, (e) => {
-      
-      const showId = $(e.target).parent().parent().parent().attr("data-show-id");
-      getEpisodesOfShow(showId)
-      //console.log("button val=",$(e.target).val())
-    }/*getEpisodesOfShow*/)
+      .append($show);
   }
 }
 //$showEpisodeButton =
@@ -105,11 +99,10 @@ async function searchForShowAndDisplay() {
   const term = $("#searchForm-term").val();
   //console.log(typeof(term)) <--this is a string
   const shows = await getShowsByTerm(term); //arrray object of shows
-  const episodes = await getEpisodesOfShow
+  const episodes = await getEpisodesOfShow;
   $episodesArea.hide();
   populateShows(shows);
   //populateEpisodes(episodes);
-  pop
 }
 
 $searchForm.on("submit", async function (evt) {
@@ -118,22 +111,27 @@ $searchForm.on("submit", async function (evt) {
 });
 
 
-
 /** Given a show ID, get from API and return (promise) array of episodes:
  *      { id, name, season, number }
  */
 //retrieve id from dom
 async function getEpisodesOfShow(showId) {
-  console.log("showId=", showId)
+  console.log("showId=", showId);
   //http://api.tvmaze.com/shows/[showid]/episodes
   //const API_BASE_URL = "http://api.tvmaze.com";
   //const showsArray = await axios.get(nameSearch, { params: { q: term } });
-  const episodeSearch = `${API_BASE_URL}/shows/${show.id}/episodes`;
-  console.log(episodeSearch)
-  episodeInfo = await axios.get(episodeSearch)
-  
+  const episodeSearch = `${API_BASE_URL}/shows/${showId}/episodes`;
+  const episodeInfo = await axios.get(episodeSearch);
+  console.log("Episode Info: ",episodeInfo);
+  return
+}
 
- }
+$showsList.on("click", ".Show-getEpisodes", (e) => {
+  const showCard = $(e.target).closest(".Show");
+  const showId = showCard.data("show-id");
+  console.log("showId=", showId);
+  getEpisodesOfShow(showId);
+});
 
 /** Write a clear docstring for this function... */
 
