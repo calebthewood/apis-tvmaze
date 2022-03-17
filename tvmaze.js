@@ -1,6 +1,7 @@
 "use strict";
 
 const $showsList = $("#showsList");
+const $episodesList = $(".episodesList")
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
 const API_BASE_URL = "http://api.tvmaze.com";
@@ -74,7 +75,7 @@ function populateShows(shows) {
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
              <div><small>${show.summary}</small></div>
-             <button class="btn btn-outline-light btn-sm Show-getEpisodes">
+             <button value="${show.id}" class="btn btn-outline-light btn-sm Show-getEpisodes">
                Episodes
              </button>
            </div>
@@ -82,22 +83,33 @@ function populateShows(shows) {
        </div>
       `);
 
-    $showsList.append($show);
+    $showsList
+    .append($show)
+    .on("click", `${}`, (e) => {
+      
+      const showId = $(e.target).parent().parent().parent().attr("data-show-id");
+      getEpisodesOfShow(showId)
+      //console.log("button val=",$(e.target).val())
+    }/*getEpisodesOfShow*/)
   }
 }
-
+//$showEpisodeButton =
 
 /** Handle search form submission: get shows from API and display.
  *    Hide episodes area (that only gets shown if they ask for episodes)
  */
 
+
+//two parts, we may need two conductor
 async function searchForShowAndDisplay() {
   const term = $("#searchForm-term").val();
   //console.log(typeof(term)) <--this is a string
-  const shows = await getShowsByTerm(term);
-
+  const shows = await getShowsByTerm(term); //arrray object of shows
+  const episodes = await getEpisodesOfShow
   $episodesArea.hide();
   populateShows(shows);
+  //populateEpisodes(episodes);
+  pop
 }
 
 $searchForm.on("submit", async function (evt) {
@@ -106,11 +118,22 @@ $searchForm.on("submit", async function (evt) {
 });
 
 
+
 /** Given a show ID, get from API and return (promise) array of episodes:
  *      { id, name, season, number }
  */
+//retrieve id from dom
+async function getEpisodesOfShow(showId) {
+  console.log("showId=", showId)
+  //http://api.tvmaze.com/shows/[showid]/episodes
+  //const API_BASE_URL = "http://api.tvmaze.com";
+  //const showsArray = await axios.get(nameSearch, { params: { q: term } });
+  const episodeSearch = `${API_BASE_URL}/shows/${show.id}/episodes`;
+  console.log(episodeSearch)
+  episodeInfo = await axios.get(episodeSearch)
+  
 
-// async function getEpisodesOfShow(id) { }
+ }
 
 /** Write a clear docstring for this function... */
 
